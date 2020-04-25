@@ -24,6 +24,14 @@ namespace HelloWorld
             amountOfHomeworksDone++;
         }
 
+        public void addMultipleHomeWorks(double[] marks)
+        {
+            foreach(double mark in marks)
+            {
+                AddHomeWorkMark(mark);
+            }
+        }
+
         public void countHomeworkResult()
         {
             double marks = 0;
@@ -50,6 +58,17 @@ namespace HelloWorld
             } else
             {
                 return homeworkResults.ElementAt(Convert.ToInt32(Math.Floor(middle)));
+            }
+        }
+
+        public string didStudentPass()
+        {
+            if (calculateFinalGrade() < 5)
+            {
+                return "Failed";
+            } else
+            {
+                return "Passed";
             }
         }
         public string firstName { get; set; }
