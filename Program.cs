@@ -10,6 +10,7 @@ namespace HelloWorld
     {
         static void Main(string[] args)
         {
+            Console.WriteLine();
             generateLinesOfStudents();
             programExecution();
         }
@@ -19,7 +20,7 @@ namespace HelloWorld
             var firstname = "name";
             var lastname = "last";
             Random rnd = new Random();
-            var fileNameStudents = "C:\\Users\\Algirdas\\Desktop\\student1000.txt";
+            var fileNameStudents = "C:\\Users\\" + Environment.UserName + "\\Desktop\\student1000.txt";
             using ( var stream = File.OpenWrite(fileNameStudents))
             {
                 using (var writer = new StreamWriter(stream))
@@ -65,7 +66,7 @@ namespace HelloWorld
 
         static void addStudentsFromFile()
         {
-            string textFile = "C:\\Users\\Algirdas\\Desktop\\student1000.txt";
+            string textFile = "C:\\Users\\" + Environment.UserName + "\\Desktop\\student1000.txt";
             var students = new List<Student>();
 
             using (StreamReader sr = new StreamReader(textFile))
@@ -102,8 +103,8 @@ namespace HelloWorld
                 }
             }
 
-            var passedStudents = "C:\\Users\\Algirdas\\Desktop\\passedStudents.txt";
-            var failedStudents = "C:\\Users\\Algirdas\\Desktop\\failedStudents.txt";
+            var passedStudents = "C:\\Users\\" + Environment.UserName + "\\Desktop\\passedStudents.txt";
+            var failedStudents = "C:\\Users\\" + Environment.UserName + "\\Desktop\\failedStudents.txt";
 
             passingStudentsToFile(studentsThatFailed, failedStudents);
             passingStudentsToFile(studentsThatPassed, passedStudents);
@@ -209,8 +210,8 @@ namespace HelloWorld
                 }
             }
 
-            var passedStudents = "C:\\Users\\Algirdas\\Desktop\\passedStudents.txt";
-            var failedStudents = "C:\\Users\\Algirdas\\Desktop\\failedStudents.txt";
+            var passedStudents = "C:\\Users\\" + Environment.UserName + "\\Desktop\\passedStudents.txt";
+            var failedStudents = "C:\\Users\\" + Environment.UserName + "\\Desktop\\failedStudents.txt";
 
             using (var stream = File.OpenWrite(passedStudents))
             {
