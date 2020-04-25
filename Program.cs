@@ -10,8 +10,9 @@ namespace HelloWorld
     {
         static void Main(string[] args)
         {
-            Console.WriteLine();
+            Console.WriteLine("Before file creation: " + DateTime.Now.ToLongTimeString(), DateTime.Now.ToLongDateString());
             generateLinesOfStudents();
+            Console.WriteLine("After file creation: " + DateTime.Now.ToLongTimeString(), DateTime.Now.ToLongDateString());
             programExecution();
         }
 
@@ -25,7 +26,7 @@ namespace HelloWorld
             {
                 using (var writer = new StreamWriter(stream))
                 {
-                    for (var i = 0; i < 1000; i++)
+                    for (var i = 0; i < 1000000; i++)
                     {
                         StringBuilder sb = new StringBuilder();
                         sb.Append(firstname + i + " ");
@@ -89,6 +90,7 @@ namespace HelloWorld
             Console.WriteLine("-------------------------------------------------------------------------------------");
             var studentsThatPassed = new List<Student>();
             var studentsThatFailed = new List<Student>();
+            Console.WriteLine("Before Split into two parts:" + DateTime.Now.ToLongTimeString(), DateTime.Now.ToLongDateString());
             foreach (Student student in students)
             {
                 student.countHomeworkResult();
@@ -102,12 +104,15 @@ namespace HelloWorld
                     studentsThatPassed.Add(student);
                 }
             }
+            Console.WriteLine("After Split into two parts:" + DateTime.Now.ToLongTimeString(), DateTime.Now.ToLongDateString());
 
             var passedStudents = "C:\\Users\\" + Environment.UserName + "\\Desktop\\passedStudents.txt";
             var failedStudents = "C:\\Users\\" + Environment.UserName + "\\Desktop\\failedStudents.txt";
 
+            Console.WriteLine("Before Sorted into two files:" + DateTime.Now.ToLongTimeString(), DateTime.Now.ToLongDateString());
             passingStudentsToFile(studentsThatFailed, failedStudents);
             passingStudentsToFile(studentsThatPassed, passedStudents);
+            Console.WriteLine("After Sorted into two files:" + DateTime.Now.ToLongTimeString(), DateTime.Now.ToLongDateString());
         }
 
         static void passingStudentsToFile(List<Student> students, String fileName)
@@ -135,10 +140,14 @@ namespace HelloWorld
             switch (GetOption())
             {
                 case 1:
+                    Console.WriteLine("Before Sort:" + DateTime.Now.ToLongTimeString(), DateTime.Now.ToLongDateString());
                     students.Sort((x, y) => x.firstName.CompareTo(y.firstName));
+                    Console.WriteLine("After Sort:" + DateTime.Now.ToLongTimeString(), DateTime.Now.ToLongDateString());
                     break;
                 case 2:
+                    Console.WriteLine("Before Sort:" + DateTime.Now.ToLongTimeString(), DateTime.Now.ToLongDateString());
                     students.Sort((x, y) => x.lastName.CompareTo(y.lastName));
+                    Console.WriteLine("After Sort:" + DateTime.Now.ToLongTimeString(), DateTime.Now.ToLongDateString());
                     break;
                 default:
                     break;
