@@ -26,7 +26,7 @@ namespace HelloWorld
             {
                 using (var writer = new StreamWriter(stream))
                 {
-                    for (var i = 0; i < 1000000; i++)
+                    for (var i = 0; i < 10000000; i++)
                     {
                         StringBuilder sb = new StringBuilder();
                         sb.Append(firstname + i + " ");
@@ -46,13 +46,15 @@ namespace HelloWorld
         static void programExecution()
         {
             Console.WriteLine("Choose a numeric option: ");
-            Console.WriteLine("1. Adding students with Array based containers");
+            Console.WriteLine("1. Adding students from text to LinkedList based containers");
             Console.WriteLine("2. Adding students with List based containers");
             Console.WriteLine("3. Adding students from a text file");
+            Console.WriteLine("4. Adding students from text to Queue based containers");
 
             switch (GetOption())
             {
                 case 1:
+                    addStudentsToLinkedList();
                     break;
                 case 2:
                     addStudentsWithList();
@@ -60,8 +62,137 @@ namespace HelloWorld
                 case 3:
                     addStudentsFromFile();
                     break;
+                case 4:
+                    addStudentsToQueue();
+                    break;
                 default:
                     break;
+            }
+        }
+
+        static void addStudentsToQueue()
+        {
+            string textFile = "C:\\Users\\" + Environment.UserName + "\\Desktop\\student1000.txt";
+            var students = new Queue<Student>();
+
+            using (StreamReader sr = new StreamReader(textFile))
+            {
+                string headerLine = sr.ReadLine();
+                string line;
+                int counter = 0;
+                while ((line = sr.ReadLine()) != null)
+                {
+                    var parts = line.Split(' ');
+                    Student student = new Student(parts[1], parts[0]);
+                    double[] grades = new double[] { Double.Parse(parts[2]), Double.Parse(parts[3]), Double.Parse(parts[4]), Double.Parse(parts[5]), Double.Parse(parts[6]) };
+                    student.addMultipleHomeWorks(grades);
+                    student.examGrade = Int32.Parse(parts[7]);
+                    students.Enqueue(student);
+                }
+            }
+            //Console.WriteLine("|{0,-15}|{1,-15}|{2,20}|{3,20}|{4,10}|", "Surname", "Name", "Final Points (Avg.)", "Final points (Med.)", "Exam");
+            //Console.WriteLine("-------------------------------------------------------------------------------------");
+            var studentsThatPassed = new Queue<Student>();
+            var studentsThatFailed = new Queue<Student>();
+            foreach (Student student in students)
+            {
+                student.countHomeworkResult();
+                //Console.WriteLine(string.Format("|{0,-15}|{1,-15}|{2,20}|{3,20}|{4,10}|", student.firstName, student.lastName, student.calculateFinalGrade(), student.calculateMedian(), student.didStudentPass()));
+                if (student.calculateFinalGrade() < 5)
+                {
+                    studentsThatFailed.Enqueue(student);
+                }
+                else
+                {
+                    studentsThatPassed.Enqueue(student);
+                }
+            }
+
+            var passedStudents = "C:\\Users\\" + Environment.UserName + "\\Desktop\\passedStudents.txt";
+            var failedStudents = "C:\\Users\\" + Environment.UserName + "\\Desktop\\failedStudents.txt";
+
+            Console.WriteLine("Before Sorted into two files:" + DateTime.Now.ToLongTimeString(), DateTime.Now.ToLongDateString());
+            passingStudentsToFileQueue(studentsThatFailed, failedStudents);
+            passingStudentsToFileQueue(studentsThatPassed, passedStudents);
+            Console.WriteLine("After Sorted into two files:" + DateTime.Now.ToLongTimeString(), DateTime.Now.ToLongDateString());
+        }
+
+        static void passingStudentsToFileQueue(Queue<Student> students, String fileName)
+        {
+            using (var stream = File.OpenWrite(fileName))
+            {
+                using (var writer = new StreamWriter(stream))
+                {
+                    writer.WriteLine("|{0,-15}|{1,-15}|{2,20}|{3,20}|{4,10}|", "Surname", "Name", "Final Points (Avg.)", "Final points (Med.)", "Exam");
+                    writer.WriteLine("-------------------------------------------------------------------------------------");
+                    foreach (Student student in students)
+                    {
+                        writer.WriteLine(string.Format("|{0,-15}|{1,-15}|{2,20}|{3,20}|{4,10}|", student.firstName, student.lastName, student.calculateFinalGrade(), student.calculateMedian(), student.didStudentPass()));
+                    }
+                }
+            }
+        }
+
+        static void addStudentsToLinkedList()
+        {
+            string textFile = "C:\\Users\\" + Environment.UserName + "\\Desktop\\student1000.txt";
+            var students = new LinkedList<Student>();
+
+            using (StreamReader sr = new StreamReader(textFile))
+            {
+                string headerLine = sr.ReadLine();
+                string line;
+                int counter = 0;
+                while ((line = sr.ReadLine()) != null)
+                {
+                    var parts = line.Split(' ');
+                    Student student = new Student(parts[1], parts[0]);
+                    double[] grades = new double[] { Double.Parse(parts[2]), Double.Parse(parts[3]), Double.Parse(parts[4]), Double.Parse(parts[5]), Double.Parse(parts[6]) };
+                    student.addMultipleHomeWorks(grades);
+                    student.examGrade = Int32.Parse(parts[7]);
+                    students.AddLast(student);
+                }
+            }
+            //Console.WriteLine("|{0,-15}|{1,-15}|{2,20}|{3,20}|{4,10}|", "Surname", "Name", "Final Points (Avg.)", "Final points (Med.)", "Exam");
+            //Console.WriteLine("-------------------------------------------------------------------------------------");
+            var studentsThatPassed = new LinkedList<Student>();
+            var studentsThatFailed = new LinkedList<Student>();
+            foreach (Student student in students)
+            {
+                student.countHomeworkResult();
+                //Console.WriteLine(string.Format("|{0,-15}|{1,-15}|{2,20}|{3,20}|{4,10}|", student.firstName, student.lastName, student.calculateFinalGrade(), student.calculateMedian(), student.didStudentPass()));
+                if (student.calculateFinalGrade() < 5)
+                {
+                    studentsThatFailed.AddLast(student);
+                }
+                else
+                {
+                    studentsThatPassed.AddLast(student);
+                }
+            }
+
+            var passedStudents = "C:\\Users\\" + Environment.UserName + "\\Desktop\\passedStudents.txt";
+            var failedStudents = "C:\\Users\\" + Environment.UserName + "\\Desktop\\failedStudents.txt";
+
+            Console.WriteLine("Before Sorted into two files:" + DateTime.Now.ToLongTimeString(), DateTime.Now.ToLongDateString());
+            passingStudentsToFileLinkedList(studentsThatFailed, failedStudents);
+            passingStudentsToFileLinkedList(studentsThatPassed, passedStudents);
+            Console.WriteLine("After Sorted into two files:" + DateTime.Now.ToLongTimeString(), DateTime.Now.ToLongDateString());
+        }
+
+        static void passingStudentsToFileLinkedList(LinkedList<Student> students, String fileName)
+        {
+            using (var stream = File.OpenWrite(fileName))
+            {
+                using (var writer = new StreamWriter(stream))
+                {
+                    writer.WriteLine("|{0,-15}|{1,-15}|{2,20}|{3,20}|{4,10}|", "Surname", "Name", "Final Points (Avg.)", "Final points (Med.)", "Exam");
+                    writer.WriteLine("-------------------------------------------------------------------------------------");
+                    foreach (Student student in students)
+                    {
+                        writer.WriteLine(string.Format("|{0,-15}|{1,-15}|{2,20}|{3,20}|{4,10}|", student.firstName, student.lastName, student.calculateFinalGrade(), student.calculateMedian(), student.didStudentPass()));
+                    }
+                }
             }
         }
 
@@ -86,7 +217,7 @@ namespace HelloWorld
                 }
             }
             chooseSortOptions(students);
-            Console.WriteLine("|{0,-15}|{1,-15}|{2,20}|{3,20}|{4,10}|", "Name", "Surname", "Final Points (Avg.)", "Final points (Med.)", "Exam");
+            Console.WriteLine("|{0,-15}|{1,-15}|{2,20}|{3,20}|{4,10}|", "Surname", "Name", "Final Points (Avg.)", "Final points (Med.)", "Exam");
             Console.WriteLine("-------------------------------------------------------------------------------------");
             var studentsThatPassed = new List<Student>();
             var studentsThatFailed = new List<Student>();
@@ -94,7 +225,7 @@ namespace HelloWorld
             foreach (Student student in students)
             {
                 student.countHomeworkResult();
-                Console.WriteLine(string.Format("|{0,-15}|{1,-15}|{2,20}|{3,20}|{4,10}|", student.firstName, student.lastName, student.calculateFinalGrade(), student.calculateMedian(), student.didStudentPass()));
+                //Console.WriteLine(string.Format("|{0,-15}|{1,-15}|{2,20}|{3,20}|{4,10}|", student.firstName, student.lastName, student.calculateFinalGrade(), student.calculateMedian(), student.didStudentPass()));
                 if (student.calculateFinalGrade() < 5)
                 {
                     studentsThatFailed.Add(student);
@@ -121,7 +252,7 @@ namespace HelloWorld
             {
                 using (var writer = new StreamWriter(stream))
                 {
-                    writer.WriteLine("|{0,-15}|{1,-15}|{2,20}|{3,20}|{4,10}|", "Name", "Surname", "Final Points (Avg.)", "Final points (Med.)", "Exam");
+                    writer.WriteLine("|{0,-15}|{1,-15}|{2,20}|{3,20}|{4,10}|", "Surname", "Name", "Final Points (Avg.)", "Final points (Med.)", "Exam");
                     writer.WriteLine("-------------------------------------------------------------------------------------");
                     foreach (Student student in students)
                     {
@@ -202,7 +333,7 @@ namespace HelloWorld
                 stop = true;
             }
 
-            Console.WriteLine("|{0,-15}|{1,-15}|{2,20}|{3,20}|{4,10}|", "Name", "Surname", "Final Points (Avg.)", "Final points (Med.)", "Exam");
+            Console.WriteLine("|{0,-15}|{1,-15}|{2,20}|{3,20}|{4,10}|", "Surname", "Name", "Final Points (Avg.)", "Final points (Med.)", "Exam");
             Console.WriteLine("-------------------------------------------------------------------------------------");
             var studentsThatPassed = new List<Student>();
             var studentsThatFailed = new List<Student>();
